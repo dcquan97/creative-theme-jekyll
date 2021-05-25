@@ -1,0 +1,141 @@
+<header>
+  <div class="header-content">
+    <div class="header-content-inner">
+      <h1>How to create your own ad filters</h1>
+      <hr>
+    </div>
+  </div>
+</header>
+<div class="Margins">
+  <p class="BodyText" style="text-align: center; font-size:25px">
+    <b>Introduction</b>
+  </p>
+                                      <hr>
+  <p class="BodyText">
+    A filter is a set of filtration rules applied to specific content (banners, popups, etc). SecureVPN is supplied with a standard filter created by our company. It’s being constantly updated by our experts and we hope that it meets the needs of most of our users. Each SecureVPN application occasionally updates the standard filters to the latest available version.</p>
+  <p class="BodyText">At the same time, SecureVPN allows you to create your own filter using the same filtration rules that the standard filters are based on. </p><br>
+    <p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Main rules</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  The simplest type of rules is called “Main rules”. They are used to block requests to specific URL’s. Let’s take a look at a simple example that uses the address of a banner you want to block as a rule. Let it be <a href='http://example.com/ads/banner.gif'>http://example.com/ads/banner.gif</a>. When the browser sends a request to this address, SecureVPN will intercept it and return an empty response. However, in most situations, banner addresses change from time to time. For instance, an address may look like <a href='http://example.com/ads/banner123.gif'>http://example.com/ads/banner123.gif</a>, where 123 is a random number. In this particular case, blocking by URL won’t work and you’ll need to use a more general filter, like <a href='http://example.com/ads/banner*.gif'>http://example.com/ads/banner*.gif</a> or maybe even <a href='http://example.com/ads/'>http://example.com/ads/</a>'. In this case, “” is an arbitrary set of characters (wildcard).</p>
+<p class="BodyText">Note: avoid blocking too much. For instance, <a href='http://example.com/*'>http://example.com/*</a> will block all the pages of example.com.</p><br>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Exception rules</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  Sometimes, you will notice that some of your rules that have been working just fine so far, are now blocking things that should not be blocked. You don’t want to delete the rule, but you also want to stop the occasional blocking of meaningful content.</p>
+<p class="BodyText">This is when you can use exception rules – they let you define when a specific rule should be applied. For instance, if a rule called adv blocks <a href='http://example.com/advice.html'>http://example.com/advice.html</a>, you can add an exception rule of the following form: @@advice. Exceptions are written in the same way as all other rules, so you can use wildcard characters and additional configuration characters (more information about them will be provided in the “Advanced functions” section).</p>
+<p class="BodyText">To let SecureVPN know that a rule is an exception, start it with @@.</p><br>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Start/end matching</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  By default, SecureVPN processes each rule as if it has wildcard characters * at the beginning and the end. For instance, there is no difference betweenad and ad rules. Usually, it’s not a problem, but sometimes you may want to have an exact match either at the beginning or the end. For instance, you may want to block all Flash content, but if you add an swf rule, the entire <a href='http://example.com/swf/index.html'>http://example.com/swf/index.html</a> address will also be blocked.</p>
+<p class="BodyText">Solution: add a | character to the rule to indicate that the end of the address is located in a specific position. For example, swf| will block <a href='http://example.com/annoyingflash.swf'>http://example.com/annoyingflash.swf</a>, but will not affect <a href='http://example.com/swf/index.html'>http://example.com/swf/index.html</a>.
+  <br>Similarly,|<a href='http://baddomain.example/'>http://baddomain.example/</a> will block <a href='http://baddomain.example/banner.gif'>http://baddomain.example/banner.gif</a>, but not <a href='http://gooddomain.example/analyze?http://baddomain.example'>http://gooddomain.example/analyze?http://baddomain.example</a>.</p>
+<p class="BodyText">Sometimes, you need to block both <a href='http://domain.com'>http://domain.com</a> and <a href='http://www.domain.com'>http://www.domain.com</a> or <a href='http://adv.domain.com'>http://adv.domain.com</a>. This can be accomplished by adding two “|” characters to the beginning of the rule corresponding to the beginning of a domain name: ||example.com/banner.gif will block all these addresses, but will not affect <a href='http://gooddomain.com/banner.gif'>http://gooddomain.com/banner.gif</a> or <a href='http://gooddomain.com/analyze?http://domain.com/banner.gif'>http://gooddomain.com/analyze?http://domain.com/banner.gif</a>.</p>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Delimiters</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  You may occasionally need to use delimiters in your rules. For example, you can write a rule that blocks <a href='http://domain.com/'>http://domain.com/</a>, but not <a href='http://domain.com.ua/'>http://domain.com.ua/</a>. Here you can use “^” as a pointer for one delimiter: <a href='http://domain.com'>http://domain.com</a>.</p>
+<p class="BodyText">A delimiter is any character except letters, numbers or one of the following characters: — . %, as well as the end of an address. In the example below, delimiters are highlighted in red:</p>
+<p class="BodyText"><a href='http://domain.com/foo.bar?a=12&b=%D1%82%D0%B5%D1%81%D1%82'>http://domain.com/foo.bar?a=12&b=%D1%82%D0%B5%D1%81%D1%82</a>.</p>
+<p class="BodyText">This address can be blocked by the following rules: ^domain.com^ or ^%D1%82%D0%B5%D1%81%D1%82^ or ^foo.bar^.</p>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Comments</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  Any rule starting with an exclamation sign contains a comment (marked in grey on the list of rules). Adguard will ignore this rule, so you are free to write anything you want here. For instance, you may want to provide a comment on a previous rule to describe what it does.</p>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Advanced functions</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  The functions described in this section are mostly intended for advanced users. They extend the capabilities of the “main rules”, but you must have an understanding of the way your browser works in order to use them.</p>
+<p class="BodyText">You can change the behavior of a “main” rule using additional parameters. The list of these parameters is appended to the end of the rule after a dollar sign ($) and its elements are delimited with commas. Example:</p>
+<p class="BodyText">||domain.ru$match-case,third-party.</p>
+<p class="BodyText">In this case, ||domain.com is a rule, while match-case and third-party are its parameters.</p>
+<p class="BodyText">Parameter types:</p>
+<ul class="BodyText">
+  <li><tt>domain</tt>&nbsp;– restricts the area of application of a rule to a list of domains. A&nbsp;<tt>domain=example.com</tt>&nbsp;parameter denotes that the rule must be applied only to the pages of&nbsp;<tt>"example.com"</tt>. You can specify multiple domains using “|” as a delimiter: when used with this parameter, the <tt>domain=example.com|example.net</tt>&nbsp;rule will be applied only to the pages located on&nbsp;<tt>"example.com"</tt>&nbsp;or&nbsp;<tt>"example.net"</tt>&nbsp;domains. If a domain name starts with a “~” sign, the rule will not be applied to the pages of this domain. For instance,&nbsp;<tt>domain=~example.com</tt>denotes that the rule will be applied to all domains, except for&nbsp;<tt>"example.com"</tt>. A&nbsp;<tt>domain=example.com|~foo.example.com</tt>&nbsp;rule restricts the rule to&nbsp;<tt>"example.com"</tt>, but excludes the&nbsp;<tt>"foo.example.com"</tt>&nbsp;subdomain.</li>
+  <br>
+  <li><tt>third-party</tt>&nbsp;– limitation on third-party and own requests. If the&nbsp;<tt>third-party</tt>&nbsp;parameter is used, the rule is applied only to requests coming from external sources. Similarly,&nbsp;<tt>~third-party</tt>&nbsp;restricts the rule to requests from the same source that the page comes from. Let’s use an example. The&nbsp;<tt>||domain.com$third-party</tt>&nbsp;rule is applied to all sites, except&nbsp;<tt>domain.com</tt>&nbsp;itself. If we rewrite it as<tt>||domain.com$~third-party</tt>, it will be applied only to&nbsp;<tt>domain.com</tt>, but will not work on other sites.</li>
+  <br>
+  <li><tt>match-case</tt>&nbsp;– defines a rule applied only to addresses with exact letter case matches. For example,&nbsp;<tt>*/BannerAd.gif$match-case</tt>&nbsp;will block&nbsp;<tt><a href="http://example.com/BannerAd.gif">http://example.com/BannerAd.gif</a></tt>, but not&nbsp;<tt><a href="http://example.com/bannerad.gif">http://example.com/bannerad.gif</a></tt>. By default, the letter case is not matched.</li>
+  <br>
+  <li><tt>elemhide</tt>&nbsp;–&nbsp;<em>it makes sense to use this parameter for exceptions only</em>. It prohibits element hiding rules on pages affected by the current rule. Element hiding rules will be described below.</li>
+  <br>
+  <li><tt>content</tt>&nbsp;–&nbsp;<em>it makes sense to use this parameter for exceptions only</em>. It prohibits HTML filtration rules on pages affected by the current rule. HTML filtration rules will be described below.</li>
+  <br>
+  <li><tt>document</tt>&nbsp;–&nbsp;<em>it makes sense to use this parameter for exceptions only</em>. It prohibits both element hiding and HTML filtration rules.</li>
+  <br>
+  <li><tt>jscript</tt>&nbsp;–&nbsp;<em>it makes sense to use this parameter for exceptions only</em>. It prohibits the filtration of javascript files loaded to pages affected by the current rule.</li>
+  <br>
+  <li><tt>jsinject</tt>&nbsp;–&nbsp;<em>it makes sense to use this parameter for exceptions only</em>. It prohibits the injection of javascript code to web pages. Javascript code is added for blocking banners by size and for the proper operation of Adguard Assistant.</li>
+  <br>
+  <li><tt>urlblock</tt>&nbsp;–&nbsp;<em>it makes sense to use this parameter for exceptions only</em>. It prohibits the blocking of requests from pages affected by the current rule.</li>
+</ul>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Element hiding rules</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  Sometimes, you will come across some ads that cannot be removed because they were added to the body of a web page as text. If you view the source code of such a page, you will find something like that:
+</p>
+<p class="BodyText">Cheap pizza, here and now!</p>
+<p class="BodyText">Extremely cheap pizza, click here!</p>
+<p class="BodyText">Here and now - best pizza!</p>
+<p class="BodyText">The first ad element is placed within a div element of the "textad" class. The following rule will hide this combination: ##div.textad. In this example, "##" is a sign of a hiding rule, while the rest is a selector defining the element to be hidden. Elements can be similarly hidden by their idattribute – for instance ##div#sponsorad will hide the second slogan. You don’t really need to specify the name of the element – the###sponsorad rule will also work. You can also hide elements by their names. For instance, ##textad will hide the third slogan.</p>
+<p class="BodyText">Note: element hiding rules are completely different from regular rules. For instance, familiar wildcard characters are not supported — they have a different meaning and application principles.</p>
+<p class="BodyText">IMPORTANT: you need basic HTML and CSS knowledge to use element hiding rules. Essentially, hiding rules are CSS selectors. Adguard adds its own styles to web pages that define element hiding rules. A {display:none!important} style is added to all CSS selectors.</p>
+<br>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Domain restrictions</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  As a rule, you want to hide specific ads on specific sites and don’t want these rules to work on the pages of other sites. For instance,&nbsp;<tt>##.sponsor</tt>may hide useful code on some sites. But if you change it to look like&nbsp;<tt>example.com##.sponsor</tt>, it will be used on&nbsp;<tt><a href="http://example.com/">http://example.com/</a></tt>&nbsp;and <tt><a href="http://something.example.com/">http://something.example.com/</a></tt>, but won’t work on&nbsp;<tt><a href="http://example.org/">http://example.org/</a></tt>.</p>
+<p class="BodyText">You can also specify multiple domains – just list them using commas as delimiters:domain1.example,domain2.example,domain3.example##.sponsor.</p>
+<p class="BodyText">If a domain name is preceded by a "~" character, the rule will not be applied to the pages of this domain. Examples: ~example.com##.sponsorwill be applied to the pages of all sites except for “example.com”. example.com,~foo.example.com##.sponsor allows you to apply the rule to "example.com", but excludes the "foo.example.com" subdomain.</p>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>HTML filtration rules</b>
+</p>
+                                    <hr>
+<p class="BodyText">In most situations, the rules described above will suffice. However, you may occasionally need to change the HTML code of web pages to filter out ads. This is accomplished with the help of HTML filtration rules. They allow you to specify what HTML elements should be removed from a page before it is sent to the browser.</p>
+<p class="BodyText">Let’s take a look at this code sample.</p>
+<p class="BodyText">Buy pizza <a href="http://bestpizzaeverad.com">Here!</a></p>
+<p class="BodyText">In this case, the ad slogan does not appear on the page immediately, but only after the page is loaded. The slogan is shown using Javascript. We can’t do anything here using the first two types of rules, but we can use HTML filtration rules to solve our problem. To get rid of this ad, we need to remove the entire script element from the code. However, not all script elements can be cut out, since the site itself may need them. Let’s use the following rule:</p>
+<p class="BodyText">$$script[type="text/javascript"][tag-content="bestpizzaeverad.com"]</p>
+<p class="BodyText">Here is what this rule does: it removes all script elements with the type attribute equal to text/javascript and containing the textbestpizzaeverad.com.</p>
+<p class="BodyText">However, this is a fairly general rule, so if you start applying it to all sites, it may create all sorts of problems. To avoid this, you can restrict the rule to specific sites only. Domain-based restriction is set in the same way we set it for element hiding rules. This is why, for instance,example.com,~foo.example.com$$script[type="text/javascript"][tag-content="bestpizzaeverad.com"] will only be applied to example.com, but not to its subdomain, foo.example.com.</p>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Additional attributes for HTML filtration</b>
+</p>
+                                    <hr>
+<p class="BodyText">
+  HTML filtration rules can be extended with the help of additional attributes. Below is a list of these elements.</p>
+<ul class="BodyText">
+  <li><tt>loaded-script</tt>&nbsp;– allows the user to apply the rule to loaded scripts, and not&nbsp;<tt>script</tt>&nbsp;elements only. It may come in handy in some situations, since ad scripts are stored on sites in an encrypted form. An example of such a rule:&nbsp;<tt>$$script[tag-content="crypted script"][loaded-script="true"]</tt>. It’s important to know that rules applied to loaded scripts should contain no other attributes except the following ones:&nbsp;<tt>tag-content, loaded-script, max-length, min-length</tt>.</li>
+  <br>
+  <li><tt>max-length</tt>&nbsp;– sets the maximum length of HTML content. If this parameter is defined and the content exceeds this limit, the rule is not applied to the element.</li>
+  <br>
+  <li><tt>min-length</tt>&nbsp;– sets the minimal length of HTML content. If this parameter is defined and the content length is below this limit, the rule is not applied to the element.</li>
+  <br>
+  <li><tt>parent-elements</tt>&nbsp;– a very important attribute that seriously affects the way this rule works. This attribute tells the program to remove the set parent element instead of the one it found. Let’s take a look at an example: <tt><table style="background: url(&quot;http://domain.com/banner.gif&quot;);"><tbody><tr><td><a href="http://bestpizzaeverad.com">Buy my pizza FAST</a></td></tr></tbody></table></tt></li>
+</ul>
+<br>
+<p class="BodyText" style="text-align: center; font-size:25px">
+  <b>Good luck in creating your own ad filters!</b>
+</p>
+<hr>
+
+<p class="BodyText">We wish you luck in creating your own ad filters. If you want your filter rules to help other Adguard users — we invite you to take part in Adguard Experimental Filter developement. <a href="http://code.google.com/p/adguard-testing-filter/">Click here</a> to learn more.</p>
+<br>
+</div>
